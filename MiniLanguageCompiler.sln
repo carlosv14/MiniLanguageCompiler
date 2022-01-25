@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.810.17
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniLanguageCompiler", "MiniLanguageCompiler\MiniLanguageCompiler.csproj", "{483E3B6A-7B4F-4A2F-A3FE-46C9DF831D51}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|anycpu = Debug|anycpu
+		Release|anycpu = Release|anycpu
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{483E3B6A-7B4F-4A2F-A3FE-46C9DF831D51}.Debug|anycpu.ActiveCfg = Debug|anycpu
+		{483E3B6A-7B4F-4A2F-A3FE-46C9DF831D51}.Debug|anycpu.Build.0 = Debug|anycpu
+		{483E3B6A-7B4F-4A2F-A3FE-46C9DF831D51}.Release|anycpu.ActiveCfg = Release|anycpu
+		{483E3B6A-7B4F-4A2F-A3FE-46C9DF831D51}.Release|anycpu.Build.0 = Release|anycpu
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {89D3707A-7C85-474F-A80B-94D65A7C0782}
+	EndGlobalSection
+EndGlobal
