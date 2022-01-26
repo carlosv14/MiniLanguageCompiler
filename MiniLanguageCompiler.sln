@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniLanguageCompiler.Lexer"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniLanguageCompiler.Core", "MiniLanguageCompiler.Core\MiniLanguageCompiler.Core.csproj", "{D7CFFCE2-9136-4353-8072-26B13E890366}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniLanguageCompiler.Infrastructure", "MiniLanguageCompiler.Infrastructure\MiniLanguageCompiler.Infrastructure.csproj", "{5214738E-C870-443A-9DF2-9C10D4C890BE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|anycpu = Debug|anycpu
@@ -27,6 +29,10 @@ Global
 		{D7CFFCE2-9136-4353-8072-26B13E890366}.Debug|anycpu.Build.0 = Debug|Any CPU
 		{D7CFFCE2-9136-4353-8072-26B13E890366}.Release|anycpu.ActiveCfg = Release|Any CPU
 		{D7CFFCE2-9136-4353-8072-26B13E890366}.Release|anycpu.Build.0 = Release|Any CPU
+		{5214738E-C870-443A-9DF2-9C10D4C890BE}.Debug|anycpu.ActiveCfg = Debug|Any CPU
+		{5214738E-C870-443A-9DF2-9C10D4C890BE}.Debug|anycpu.Build.0 = Debug|Any CPU
+		{5214738E-C870-443A-9DF2-9C10D4C890BE}.Release|anycpu.ActiveCfg = Release|Any CPU
+		{5214738E-C870-443A-9DF2-9C10D4C890BE}.Release|anycpu.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

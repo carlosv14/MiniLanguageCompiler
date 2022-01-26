@@ -44,6 +44,10 @@
       <Project>{D7CFFCE2-9136-4353-8072-26B13E890366}</Project>
       <Name>MiniLanguageCompiler.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\MiniLanguageCompiler.Infrastructure\MiniLanguageCompiler.Infrastructure.csproj">
+      <Project>{5214738E-C870-443A-9DF2-9C10D4C890BE}</Project>
+      <Name>MiniLanguageCompiler.Infrastructure</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

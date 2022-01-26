@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using MiniLanguageCompiler.Infrastructure;
 using MiniLanguageCompiler.Lexer;
 
 namespace MiniLanguageCompiler.Console
@@ -9,10 +10,14 @@ namespace MiniLanguageCompiler.Console
         public static void Main(string[] args)
         {
             var fileContent = File.ReadAllText("test.txt");
-            var scanner = new Scanner(new Input(fileContent));
-            System.Console.WriteLine(scanner.GetNextToken().ToString());
-            System.Console.WriteLine(scanner.GetNextToken().ToString());
-            System.Console.WriteLine(scanner.GetNextToken().ToString());
+            var logger = new Logger();
+            var scanner = new Scanner(new Input(fileContent), logger);
+            var token = scanner.GetNextToken();
+            while (token.TokenType != Core.TokenType.EOF)
+            {
+                logger.Info(token.ToString());
+                token = scanner.GetNextToken();
+            }
         }
     }
 }
