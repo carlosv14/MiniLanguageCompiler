@@ -30,10 +30,9 @@ namespace MiniLanguageCompiler.Core
        Identifier,
        StringKeyword,
        EOF,
-       Assignation,
        StringLiteral,
        NumberLiteral,
-       IntArrayKeyword,
-       StringArrayKeyword,
+       ArrayKeyword,
+       PrintKeyword,
     }
 }

@@ -24,8 +24,8 @@ namespace MiniLanguageCompiler.Lexer
                 ["number"] = TokenType.NumberKeyword,
                 ["string"] = TokenType.StringKeyword,
                 ["while"] = TokenType.WhileKeyword,
-                ["StringArray"] = TokenType.StringArrayKeyword,
-                ["IntArray"] = TokenType.IntArrayKeyword,
+                ["Array"] = TokenType.ArrayKeyword,
+                ["print"] = TokenType.PrintKeyword,
             };
         }
 
@@ -158,18 +158,21 @@ namespace MiniLanguageCompiler.Lexer
                             lexeme.Append(currentChar);
                             return BuildToken(lexeme.ToString(), TokenType.Equal);
                         }
-                        return BuildToken(lexeme.ToString(), TokenType.Assignation);
+                        break;
                     case '\'':
                         lexeme.Append(currentChar);
                         currentChar = GetNextChar();
-                        while (currentChar != '\'')
+                        while (currentChar != '\'' && currentChar != '\0')
                         {
                             lexeme.Append(currentChar);
                             currentChar = GetNextChar();
                         }
-                        lexeme.Append(currentChar);
-                        return BuildToken(lexeme.ToString(), TokenType.StringLiteral);
-
+                        if (currentChar == '\'')
+                        {
+                            lexeme.Append(currentChar);
+                            return BuildToken(lexeme.ToString(), TokenType.StringLiteral);
+                        }
+                        break;
                     case '&':
                         lexeme.Append(currentChar);
                         currentChar = GetNextChar();
@@ -206,8 +209,8 @@ namespace MiniLanguageCompiler.Lexer
         {
             return new Token
             {
-                Column = this.input.Position.Column,
-                Line = this.input.Position.Line,
+                Column = this.input.Position.Column > 0 ? this.input.Position.Column - 1 : this.input.Position.Column,
+                Line = this.input.Position.Line + 1,
                 Lexeme = lexeme,
                 TokenType = tokenType,
             };

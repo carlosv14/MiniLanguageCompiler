@@ -35,6 +35,7 @@
     <Compile Include="Models\Token.cs" />
     <Compile Include="TokenType.cs" />
     <Compile Include="Interfaces\ILogger.cs" />
+    <Compile Include="Interfaces\IParser.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Interfaces\" />

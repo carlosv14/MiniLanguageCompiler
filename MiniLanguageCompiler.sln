@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniLanguageCompiler.Core",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniLanguageCompiler.Infrastructure", "MiniLanguageCompiler.Infrastructure\MiniLanguageCompiler.Infrastructure.csproj", "{5214738E-C870-443A-9DF2-9C10D4C890BE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniLanguageCompiler.Parser", "MiniLanguageCompiler.Parser\MiniLanguageCompiler.Parser.csproj", "{0EC4F948-15DE-454A-8364-E7BC176C42DF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|anycpu = Debug|anycpu
@@ -33,6 +35,10 @@ Global
 		{5214738E-C870-443A-9DF2-9C10D4C890BE}.Debug|anycpu.Build.0 = Debug|Any CPU
 		{5214738E-C870-443A-9DF2-9C10D4C890BE}.Release|anycpu.ActiveCfg = Release|Any CPU
 		{5214738E-C870-443A-9DF2-9C10D4C890BE}.Release|anycpu.Build.0 = Release|Any CPU
+		{0EC4F948-15DE-454A-8364-E7BC176C42DF}.Debug|anycpu.ActiveCfg = Debug|Any CPU
+		{0EC4F948-15DE-454A-8364-E7BC176C42DF}.Debug|anycpu.Build.0 = Debug|Any CPU
+		{0EC4F948-15DE-454A-8364-E7BC176C42DF}.Release|anycpu.ActiveCfg = Release|Any CPU
+		{0EC4F948-15DE-454A-8364-E7BC176C42DF}.Release|anycpu.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -48,6 +48,15 @@
       <Project>{5214738E-C870-443A-9DF2-9C10D4C890BE}</Project>
       <Name>MiniLanguageCompiler.Infrastructure</Name>
     </ProjectReference>
+    <ProjectReference Include="..\MiniLanguageCompiler.Parser\MiniLanguageCompiler.Parser.csproj">
+      <Project>{0EC4F948-15DE-454A-8364-E7BC176C42DF}</Project>
+      <Name>MiniLanguageCompiler.Parser</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="test.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
