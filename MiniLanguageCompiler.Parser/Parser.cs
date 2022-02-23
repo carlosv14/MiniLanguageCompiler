@@ -1,7 +1,9 @@
 ﻿using System;
 using MiniLanguageCompiler.Core;
+using MiniLanguageCompiler.Core.Expressions;
 using MiniLanguageCompiler.Core.Interfaces;
 using MiniLanguageCompiler.Core.Models;
+using MiniLanguageCompiler.Core.Statements;
 
 namespace MiniLanguageCompiler.Parser
 {
@@ -19,24 +21,25 @@ namespace MiniLanguageCompiler.Parser
             this.Move();
         }
 
-        public void Parse()
+        public Statement Parse()
         {
-            Program();
+            return Program();
         }
 
-        private void Program()
+        private Statement Program()
         {
-            Block();
+            return Block();
         }
 
-        private void Block()
+        private Statement Block()
         {
             //{
             this.Match(TokenType.LeftBrace);
             Decls();
-            Stmts();
+            var statements = Stmts();
             //}
             this.Match(TokenType.RightBrace);
+            return statements;
         }
 
         private void Decls()
@@ -81,17 +84,17 @@ namespace MiniLanguageCompiler.Parser
             }
         }
 
-        private void Stmts()
+        private Statement Stmts()
         {
             if (this.lookAhead.TokenType == TokenType.RightBrace)
             {
-                return;
+                return null;
             }
-            Stmt();
-            Stmts();
+
+            return new SequenceStatement(Stmt(), Stmts());
         }
 
-        private void Stmt()
+        private Statement Stmt()
         {
             switch (this.lookAhead.TokenType)
             {
@@ -105,23 +108,22 @@ namespace MiniLanguageCompiler.Parser
                 case TokenType.IfKeyword:
                     this.Match(TokenType.IfKeyword);
                     this.Match(TokenType.LeftParens);
-                    LogicalOrExpr();
+                    var expression = LogicalOrExpr();
                     this.Match(TokenType.RightParens);
-                    Stmt();
+                    var trueStatement = Stmt();
                     if (this.lookAhead.TokenType != TokenType.ElseKeyword)
                     {
                         break;
                     }
                     this.Match(TokenType.ElseKeyword);
-                    Stmt();
-                    break;
+                    var falseStatement = Stmt();
+                    return new IfStatement(expression, trueStatement, falseStatement);
                 case TokenType.WhileKeyword:
                     this.Match(TokenType.WhileKeyword);
                     this.Match(TokenType.LeftParens);
-                    LogicalOrExpr();
+                    expression = LogicalOrExpr();
                     this.Match(TokenType.RightParens);
-                    Stmt();
-                    break;
+                    return new WhileStatement(expression, Stmt());
                 case TokenType.PrintKeyword:
                     this.Match(TokenType.PrintKeyword);
                     this.Match(TokenType.LeftParens);
@@ -130,8 +132,7 @@ namespace MiniLanguageCompiler.Parser
                     this.Match(TokenType.Semicolon);
                     break;
                 default:
-                    Block();
-                    break;
+                    return Block();
             }
         }
 
@@ -163,101 +164,119 @@ namespace MiniLanguageCompiler.Parser
             LogicalOrExpr();
         }
 
-        private void LogicalOrExpr()
+        private Expression LogicalOrExpr()
         {
-            LogicalAndExpr();
+            var expression = LogicalAndExpr();
             while (this.lookAhead.TokenType == TokenType.LogicalOr)
             {
+                var token = this.lookAhead;
                 this.Move();
-                LogicalAndExpr();
+                expression =  new LogicalExpression(token, expression, LogicalAndExpr());
             }
+
+            return expression;
         }
 
-        private void LogicalAndExpr()
+        private Expression LogicalAndExpr()
         {
-            Eq();
+            var expr = Eq();
             while (this.lookAhead.TokenType == TokenType.LogicalAnd)
             {
+                var token = this.lookAhead;
                 this.Move();
-                Eq();
+                expr = new LogicalExpression(token, expr, Eq());
             }
+
+            return expr;
         }
 
-        private void Eq()
+        private Expression Eq()
         {
-            Rel();
+            var expr = Rel();
             while (this.lookAhead.TokenType == TokenType.Equal)
             {
+                var token = this.lookAhead;
                 this.Move();
-                Rel();
+                expr = new RelationalExpression(token, expr, Rel());
             }
+
+            return expr;
         }
 
 
-        private void Rel()
+        private Expression Rel()
         {
-            Expr();
+            var expr = Expr();
             while(this.lookAhead.TokenType == TokenType.LessThan ||
                 this.lookAhead.TokenType == TokenType.GreaterThan ||
                 this.lookAhead.TokenType == TokenType.LessOrEqualThan ||
                 this.lookAhead.TokenType == TokenType.GreaterOrEqualThan)
             {
+                var token = this.lookAhead;
                 this.Move();
-                Expr();
+                expr = new RelationalExpression(token, expr, Expr());
             }
+
+            return expr;
         }
 
-        private void Expr()
+        private Expression Expr()
         {
-            Term();
+            var expr = Term();
             while (this.lookAhead.TokenType == TokenType.Plus || this.lookAhead.TokenType == TokenType.Minus)
             {
+                var token = this.lookAhead;
                 this.Move();
-                Term();
+                expr = new ArithmeticExpression(token, expr, Term());
             }
+
+            return expr;
         }
 
-        private void Term()
+        private Expression Term()
         {
-            PostFixExpr();
+            var expr = PostFixExpr();
             while (this.lookAhead.TokenType == TokenType.Multiplication || this.lookAhead.TokenType == TokenType.Division)
             {
+                var token = this.lookAhead;
                 this.Move();
-                PostFixExpr();
+                expr = new ArithmeticExpression(token, expr, PostFixExpr());
             }
+
+            return expr;
         }
 
-        private void PostFixExpr()
+        private Expression PostFixExpr()
         {
-            Factor();
+            var expr = Factor();
             if (this.lookAhead.TokenType == TokenType.LeftBracket)
             {
                 this.Match(TokenType.LeftBracket);
                 LogicalOrExpr();
                 this.Match(TokenType.RightBracket);
             }
+
+            return expr;
         }
 
-        private void Factor()
+        private Expression Factor()
         {
             switch (this.lookAhead.TokenType)
             {
                 case TokenType.LeftParens:
                     this.Match(TokenType.LeftParens);
-                    LogicalOrExpr();
+                    var expr = LogicalOrExpr();
                     this.Match(TokenType.RightParens);
-                    break;
-                case TokenType.Identifier:
-                    this.Match(TokenType.Identifier);
-                    break;
+                    return expr;
                 case TokenType.NumberLiteral:
                     this.Match(TokenType.NumberLiteral);
-                    break;
+                    return new ConstantExpression(Core.Type.Number, this.lookAhead);
                 case TokenType.StringLiteral:
                     this.Match(TokenType.StringLiteral);
-                    break;
+                    return new ConstantExpression(Core.Type.String, this.lookAhead);
                 default:
-                    break;
+                    this.Match(TokenType.Identifier);
+                    return null;
             }
         }
     

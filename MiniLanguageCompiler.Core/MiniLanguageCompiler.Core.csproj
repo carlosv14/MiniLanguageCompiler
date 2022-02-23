@@ -36,10 +36,28 @@
     <Compile Include="TokenType.cs" />
     <Compile Include="Interfaces\ILogger.cs" />
     <Compile Include="Interfaces\IParser.cs" />
+    <Compile Include="Expressions\Expression.cs" />
+    <Compile Include="Node.cs" />
+    <Compile Include="Type.cs" />
+    <Compile Include="Expressions\BinaryExpression.cs" />
+    <Compile Include="Expressions\ArithmeticExpression.cs" />
+    <Compile Include="Expressions\RelationalExpression.cs" />
+    <Compile Include="Expressions\IdExpression.cs" />
+    <Compile Include="Expressions\ConstantExpression.cs" />
+    <Compile Include="Statements\AssignationStatement.cs" />
+    <Compile Include="Statements\Statement.cs" />
+    <Compile Include="Statements\IfStatement.cs" />
+    <Compile Include="Statements\SequenceStatement.cs" />
+    <Compile Include="Statements\WhileStatement.cs" />
+    <Compile Include="Expressions\LogicalExpression.cs" />
+    <Compile Include="Statements\PrintStatement.cs" />
+    <Compile Include="Expressions\SequenceExpression.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Interfaces\" />
     <Folder Include="Models\" />
+    <Folder Include="Expressions\" />
+    <Folder Include="Statements\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

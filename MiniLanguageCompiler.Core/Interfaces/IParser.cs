@@ -1,8 +1,10 @@
 ﻿using System;
+using MiniLanguageCompiler.Core.Statements;
+
 namespace MiniLanguageCompiler.Core.Interfaces
 {
     public interface IParser
     {
-        void Parse();
+        Statement Parse();
     }
 }

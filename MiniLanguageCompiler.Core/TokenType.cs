@@ -34,5 +34,6 @@ namespace MiniLanguageCompiler.Core
        NumberLiteral,
        ArrayKeyword,
        PrintKeyword,
+       BasicType,
     }
 }
