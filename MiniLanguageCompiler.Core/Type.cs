@@ -49,5 +49,9 @@ namespace MiniLanguageCompiler.Core
         {
             return Lexeme;
         }
+
+        public static bool operator ==(Type a, Type b) => a.Equals(b);
+
+        public static bool operator !=(Type a, Type b) => !a.Equals(b);
     }
 }

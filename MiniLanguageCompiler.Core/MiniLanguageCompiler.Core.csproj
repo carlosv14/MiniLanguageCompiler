@@ -36,7 +36,6 @@
     <Compile Include="TokenType.cs" />
     <Compile Include="Interfaces\ILogger.cs" />
     <Compile Include="Interfaces\IParser.cs" />
-    <Compile Include="Expressions\Expression.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="Type.cs" />
     <Compile Include="Expressions\BinaryExpression.cs" />
@@ -51,7 +50,8 @@
     <Compile Include="Statements\WhileStatement.cs" />
     <Compile Include="Expressions\LogicalExpression.cs" />
     <Compile Include="Statements\PrintStatement.cs" />
-    <Compile Include="Expressions\SequenceExpression.cs" />
+    <Compile Include="Expressions\TypedExpression.cs" />
+    <Compile Include="Symbol.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Interfaces\" />

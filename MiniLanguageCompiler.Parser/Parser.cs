@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using MiniLanguageCompiler.Core;
 using MiniLanguageCompiler.Core.Expressions;
 using MiniLanguageCompiler.Core.Interfaces;
@@ -13,6 +15,7 @@ namespace MiniLanguageCompiler.Parser
         private readonly IScanner scanner;
         private readonly ILogger logger;
         private Token lookAhead;
+        private Environment topEnvironment;
 
         public Parser(IScanner scanner, ILogger logger)
         {
@@ -23,7 +26,9 @@ namespace MiniLanguageCompiler.Parser
 
         public Statement Parse()
         {
-            return Program();
+            var program = Program();
+            program.ValidateSemantic();
+            return program;
         }
 
         private Statement Program()
@@ -35,10 +40,13 @@ namespace MiniLanguageCompiler.Parser
         {
             //{
             this.Match(TokenType.LeftBrace);
+            var savedEnvironment = topEnvironment;
+            topEnvironment = new Environment(topEnvironment);
             Decls();
             var statements = Stmts();
             //}
             this.Match(TokenType.RightBrace);
+            topEnvironment = savedEnvironment;
             return statements;
         }
 
@@ -54,33 +62,35 @@ namespace MiniLanguageCompiler.Parser
         private void Decl()
         {
             //id
+            var token = this.lookAhead;
             this.Match(TokenType.Identifier);
             //:
             this.Match(TokenType.Colon);
-            Type();
+            var type = Type();
             //;
             this.Match(TokenType.Semicolon);
+            var id = new IdExpression(type, token);
+            topEnvironment.Put(token.Lexeme, id);
         }
 
-        private void Type()
+        private Core.Type Type()
         {
             switch (this.lookAhead.TokenType)
             {
                 case TokenType.NumberKeyword:
                     this.Match(TokenType.NumberKeyword);
-                    break;
+                    return Core.Type.Number;
                 case TokenType.StringKeyword:
                     this.Match(TokenType.StringKeyword);
-                    break;
+                    return Core.Type.String;
                 case TokenType.ArrayKeyword:
                     this.Match(TokenType.ArrayKeyword);
                     this.Match(TokenType.LessThan);
                     Type();
                     this.Match(TokenType.GreaterThan);
-                    break;
+                    return null;
                 default:
-                    this.logger.Error($"Syntax error! Unrecognized type in line: {this.lookAhead.Line} and column: {this.lookAhead.Column}");
-                    break;
+                    throw new ApplicationException($"Syntax error! Unrecognized type in line: {this.lookAhead.Line} and column: {this.lookAhead.Column}");
             }
         }
 
@@ -99,85 +109,91 @@ namespace MiniLanguageCompiler.Parser
             switch (this.lookAhead.TokenType)
             {
                 case TokenType.Identifier:
+                    var symbol = topEnvironment.Get(this.lookAhead.Lexeme);
                     this.Match(TokenType.Identifier);
                     this.Match(TokenType.LessThan);
                     this.Match(TokenType.Minus);
-                    AssignmentExpr();
+                    var stmt = AssignmentStmt(symbol.Id);
                     this.Match(TokenType.Semicolon);
-                    break;
+                    return stmt;
                 case TokenType.IfKeyword:
                     this.Match(TokenType.IfKeyword);
                     this.Match(TokenType.LeftParens);
-                    var expression = LogicalOrExpr();
+                    var TypedExpression = LogicalOrExpr();
                     this.Match(TokenType.RightParens);
                     var trueStatement = Stmt();
                     if (this.lookAhead.TokenType != TokenType.ElseKeyword)
                     {
-                        break;
+                        return new IfStatement(TypedExpression, trueStatement, null);
                     }
                     this.Match(TokenType.ElseKeyword);
                     var falseStatement = Stmt();
-                    return new IfStatement(expression, trueStatement, falseStatement);
+                    return new IfStatement(TypedExpression, trueStatement, falseStatement);
                 case TokenType.WhileKeyword:
                     this.Match(TokenType.WhileKeyword);
                     this.Match(TokenType.LeftParens);
-                    expression = LogicalOrExpr();
+                    TypedExpression = LogicalOrExpr();
                     this.Match(TokenType.RightParens);
-                    return new WhileStatement(expression, Stmt());
+                    return new WhileStatement(TypedExpression, Stmt());
                 case TokenType.PrintKeyword:
                     this.Match(TokenType.PrintKeyword);
                     this.Match(TokenType.LeftParens);
-                    Params();
+                    var @params = Params();
                     this.Match(TokenType.RightParens);
                     this.Match(TokenType.Semicolon);
-                    break;
+                    return new PrintStatement(@params);
                 default:
                     return Block();
             }
         }
 
-        private void Params()
+        private IEnumerable<TypedExpression> Params()
         {
-            LogicalOrExpr();
-            ParamsPrime();
+            var @params = new List<TypedExpression>();
+            @params.Add(LogicalOrExpr());
+            @params.AddRange(ParamsPrime());
+            return @params;
         }
 
-        private void ParamsPrime()
+        private IEnumerable<TypedExpression> ParamsPrime()
         {
+            var @params = new List<TypedExpression>();
             if (this.lookAhead.TokenType == TokenType.Comma)
             {
                 this.Match(TokenType.Comma);
-                LogicalOrExpr();
-                ParamsPrime();
+                @params.Add(LogicalOrExpr());
+                @params.AddRange(ParamsPrime());
             }
+            return @params;
         }
 
-        private void AssignmentExpr()
+        private Statement AssignmentStmt(IdExpression id)
         {
             if (this.lookAhead.TokenType == TokenType.LeftBracket)
             {
                 this.Match(TokenType.LeftBracket);
                 Params();
                 this.Match(TokenType.RightBracket);
-                return;
+                return null;
             }
-            LogicalOrExpr();
+            var expr = LogicalOrExpr();
+            return new AssignationStatement(id, expr);
         }
 
-        private Expression LogicalOrExpr()
+        private TypedExpression LogicalOrExpr()
         {
-            var expression = LogicalAndExpr();
+            var TypedExpression = LogicalAndExpr();
             while (this.lookAhead.TokenType == TokenType.LogicalOr)
             {
                 var token = this.lookAhead;
                 this.Move();
-                expression =  new LogicalExpression(token, expression, LogicalAndExpr());
+                TypedExpression =  new LogicalExpression(token, TypedExpression, LogicalAndExpr());
             }
 
-            return expression;
+            return TypedExpression;
         }
 
-        private Expression LogicalAndExpr()
+        private TypedExpression LogicalAndExpr()
         {
             var expr = Eq();
             while (this.lookAhead.TokenType == TokenType.LogicalAnd)
@@ -190,7 +206,7 @@ namespace MiniLanguageCompiler.Parser
             return expr;
         }
 
-        private Expression Eq()
+        private TypedExpression Eq()
         {
             var expr = Rel();
             while (this.lookAhead.TokenType == TokenType.Equal)
@@ -204,7 +220,7 @@ namespace MiniLanguageCompiler.Parser
         }
 
 
-        private Expression Rel()
+        private TypedExpression Rel()
         {
             var expr = Expr();
             while(this.lookAhead.TokenType == TokenType.LessThan ||
@@ -220,7 +236,7 @@ namespace MiniLanguageCompiler.Parser
             return expr;
         }
 
-        private Expression Expr()
+        private TypedExpression Expr()
         {
             var expr = Term();
             while (this.lookAhead.TokenType == TokenType.Plus || this.lookAhead.TokenType == TokenType.Minus)
@@ -233,7 +249,7 @@ namespace MiniLanguageCompiler.Parser
             return expr;
         }
 
-        private Expression Term()
+        private TypedExpression Term()
         {
             var expr = PostFixExpr();
             while (this.lookAhead.TokenType == TokenType.Multiplication || this.lookAhead.TokenType == TokenType.Division)
@@ -246,7 +262,7 @@ namespace MiniLanguageCompiler.Parser
             return expr;
         }
 
-        private Expression PostFixExpr()
+        private TypedExpression PostFixExpr()
         {
             var expr = Factor();
             if (this.lookAhead.TokenType == TokenType.LeftBracket)
@@ -259,7 +275,7 @@ namespace MiniLanguageCompiler.Parser
             return expr;
         }
 
-        private Expression Factor()
+        private TypedExpression Factor()
         {
             switch (this.lookAhead.TokenType)
             {
@@ -269,14 +285,17 @@ namespace MiniLanguageCompiler.Parser
                     this.Match(TokenType.RightParens);
                     return expr;
                 case TokenType.NumberLiteral:
+                    var token = this.lookAhead;
                     this.Match(TokenType.NumberLiteral);
-                    return new ConstantExpression(Core.Type.Number, this.lookAhead);
+                    return new ConstantExpression(Core.Type.Number, token);
                 case TokenType.StringLiteral:
+                    token = this.lookAhead;
                     this.Match(TokenType.StringLiteral);
-                    return new ConstantExpression(Core.Type.String, this.lookAhead);
+                    return new ConstantExpression(Core.Type.String, token);
                 default:
+                    token = this.lookAhead;
                     this.Match(TokenType.Identifier);
-                    return null;
+                    return topEnvironment.Get(token.Lexeme).Id;
             }
         }
     
