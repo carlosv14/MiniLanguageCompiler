@@ -17,7 +17,7 @@ namespace MiniLanguageCompiler.Lexer
         {
             this.input = input;
             this.logger = logger;
-            this.keywords = new Dictionary<string, TokenType>
+            this.keywords = new Dictionary<string, TokenType>()
             {
                 ["if"] = TokenType.IfKeyword,
                 ["else"] = TokenType.ElseKeyword,

@@ -1,5 +1,5 @@
-﻿using System;
-using MiniLanguageCompiler.Core.Models;
+﻿using MiniLanguageCompiler.Core.Models;
+using MiniLanguageCompiler.Core.Types;
 
 namespace MiniLanguageCompiler.Core.Expressions
 {

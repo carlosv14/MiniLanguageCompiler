@@ -37,7 +37,6 @@
     <Compile Include="Interfaces\ILogger.cs" />
     <Compile Include="Interfaces\IParser.cs" />
     <Compile Include="Node.cs" />
-    <Compile Include="Type.cs" />
     <Compile Include="Expressions\BinaryExpression.cs" />
     <Compile Include="Expressions\ArithmeticExpression.cs" />
     <Compile Include="Expressions\RelationalExpression.cs" />
@@ -52,12 +51,17 @@
     <Compile Include="Statements\PrintStatement.cs" />
     <Compile Include="Expressions\TypedExpression.cs" />
     <Compile Include="Symbol.cs" />
+    <Compile Include="Types\Type.cs" />
+    <Compile Include="Types\Array.cs" />
+    <Compile Include="Expressions\ArrayAccess.cs" />
+    <Compile Include="Statements\ArrayAssignationStatement.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Interfaces\" />
     <Folder Include="Models\" />
     <Folder Include="Expressions\" />
     <Folder Include="Statements\" />
+    <Folder Include="Types\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

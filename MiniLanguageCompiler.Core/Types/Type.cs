@@ -1,5 +1,5 @@
 ﻿using System;
-namespace MiniLanguageCompiler.Core
+namespace MiniLanguageCompiler.Core.Types
 {
     public class Type : IEquatable<Type>
     {

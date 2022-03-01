@@ -7,6 +7,7 @@ namespace MiniLanguageCompiler.Core.Statements
         {
             FirstStatement = firstStatement;
             NextStatement = nextStatement;
+            this.ValidateSemantic();    
         }
 
         public Statement FirstStatement { get; }

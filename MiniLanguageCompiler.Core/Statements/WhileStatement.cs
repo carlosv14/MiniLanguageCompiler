@@ -1,5 +1,6 @@
 ﻿using System;
 using MiniLanguageCompiler.Core.Expressions;
+using MiniLanguageCompiler.Core.Types;
 
 namespace MiniLanguageCompiler.Core.Statements
 {
@@ -9,6 +10,7 @@ namespace MiniLanguageCompiler.Core.Statements
         {
             Expression = expression;
             Statement = statement;
+            this.ValidateSemantic();
         }
 
         public TypedExpression Expression { get; }
@@ -16,7 +18,7 @@ namespace MiniLanguageCompiler.Core.Statements
 
         public override void ValidateSemantic()
         {
-            if (this.Expression.GetExpressionType() != Type.Bool)
+            if (this.Expression.GetExpressionType() != Types.Type.Bool)
             {
                 throw new ApplicationException($"Expression inside while must be boolean");
             }

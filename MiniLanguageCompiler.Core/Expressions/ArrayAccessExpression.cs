@@ -3,11 +3,17 @@ using MiniLanguageCompiler.Core.Types;
 
 namespace MiniLanguageCompiler.Core.Expressions
 {
-    public class ConstantExpression : TypedExpression
+    public class ArrayAccessExpression : TypedExpression
     {
-        public ConstantExpression(Type type, Token token)
+        public IdExpression Id { get; }
+
+        public TypedExpression Index { get; }
+
+        public ArrayAccessExpression(Type type, Token token, IdExpression id, TypedExpression index)
             : base(type, token)
         {
+            Id = id;
+            Index = index;
         }
 
         public override Type GetExpressionType()

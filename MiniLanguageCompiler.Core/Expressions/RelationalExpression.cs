@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using MiniLanguageCompiler.Core.Models;
+using MiniLanguageCompiler.Core.Types;
 
 namespace MiniLanguageCompiler.Core.Expressions
 {
@@ -27,7 +27,7 @@ namespace MiniLanguageCompiler.Core.Expressions
                 return resultType;
             }
 
-            throw new ApplicationException($"Cannot perform relational operation on types {leftType} and {rightType}");
+            throw new System.ApplicationException($"Cannot perform relational operation on types {leftType} and {rightType}");
         }
     }
 }

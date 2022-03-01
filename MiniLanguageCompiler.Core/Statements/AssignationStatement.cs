@@ -9,6 +9,7 @@ namespace MiniLanguageCompiler.Core.Statements
         {
             Id = id;
             Expression = expression;
+            this.ValidateSemantic();
         }
 
         public IdExpression Id { get; }

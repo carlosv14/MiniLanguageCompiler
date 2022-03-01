@@ -35,5 +35,6 @@ namespace MiniLanguageCompiler.Core
        ArrayKeyword,
        PrintKeyword,
        BasicType,
+       ComplexType,
     }
 }

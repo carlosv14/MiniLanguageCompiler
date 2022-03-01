@@ -7,9 +7,11 @@ namespace MiniLanguageCompiler.Core.Statements
     {
         public IfStatement(TypedExpression expression, Statement trueStatement, Statement falseStatement)
         {
+            var x = 0;
             Expression = expression;
             TrueStatement = trueStatement;
             FalseStatement = falseStatement;
+            this.ValidateSemantic();
         }
 
         public TypedExpression Expression { get; }
@@ -18,7 +20,7 @@ namespace MiniLanguageCompiler.Core.Statements
 
         public override void ValidateSemantic()
         {
-            if (this.Expression.GetExpressionType() != Type.Bool)
+            if (this.Expression.GetExpressionType() != Types.Type.Bool)
             {
                 throw new ApplicationException($"Expression inside if must be boolean");
             }
