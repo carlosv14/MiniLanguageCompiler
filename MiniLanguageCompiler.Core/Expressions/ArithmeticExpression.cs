@@ -20,6 +20,7 @@ namespace MiniLanguageCompiler.Core.Expressions
                 { (Type.Number, Type.Number, TokenType.Minus), Type.Number },
                 { (Type.Number, Type.Number, TokenType.Multiplication), Type.Number },
                 { (Type.Number, Type.Number, TokenType.Division), Type.Number },
+                { (Type.Bool, Type.Bool, TokenType.Plus), Type.Bool },
             };
         }
 

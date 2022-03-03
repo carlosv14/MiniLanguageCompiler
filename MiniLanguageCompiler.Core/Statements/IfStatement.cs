@@ -7,7 +7,6 @@ namespace MiniLanguageCompiler.Core.Statements
     {
         public IfStatement(TypedExpression expression, Statement trueStatement, Statement falseStatement)
         {
-            var x = 0;
             Expression = expression;
             TrueStatement = trueStatement;
             FalseStatement = falseStatement;

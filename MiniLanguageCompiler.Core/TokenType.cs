@@ -36,5 +36,8 @@ namespace MiniLanguageCompiler.Core
        PrintKeyword,
        BasicType,
        ComplexType,
+       BoolKeyword,
+       TrueKeyword,
+       FalseKeyword
     }
 }

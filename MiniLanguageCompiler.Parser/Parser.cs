@@ -42,6 +42,11 @@ namespace MiniLanguageCompiler.Parser
             var savedEnvironment = topEnvironment;
             topEnvironment = new Environment(topEnvironment);
             Decls();
+            if (this.lookAhead.TokenType == TokenType.Semicolon)
+            {
+                //;
+                this.Match(TokenType.Semicolon);
+            }
             var statements = Stmts();
             //}
             this.Match(TokenType.RightBrace);
@@ -54,8 +59,6 @@ namespace MiniLanguageCompiler.Parser
             while (this.lookAhead.TokenType == TokenType.Identifier)
             {
                 Decl();
-                //;
-                this.Match(TokenType.Semicolon);
             }
         }
 
@@ -87,6 +90,9 @@ namespace MiniLanguageCompiler.Parser
                     var type = Type();
                     this.Match(TokenType.GreaterThan);
                     return new Core.Types.Array("[]", TokenType.ComplexType, type);
+                case TokenType.BoolKeyword:
+                    this.Match(TokenType.BoolKeyword);
+                    return Core.Types.Type.Bool;
                 default:
                     throw new ApplicationException($"Syntax error! Unrecognized type in line: {this.lookAhead.Line} and column: {this.lookAhead.Column}");
             }
@@ -302,6 +308,14 @@ namespace MiniLanguageCompiler.Parser
                     token = this.lookAhead;
                     this.Match(TokenType.StringLiteral);
                     return new ConstantExpression(Core.Types.Type.String, token);
+                case TokenType.TrueKeyword:
+                    token = this.lookAhead;
+                    this.Match(TokenType.TrueKeyword);
+                    return new ConstantExpression(Core.Types.Type.Bool, token);
+                case TokenType.FalseKeyword:
+                    token = this.lookAhead;
+                    this.Match(TokenType.FalseKeyword);
+                    return new ConstantExpression(Core.Types.Type.Bool, token);
                 default:
                     token = this.lookAhead;
                     this.Match(TokenType.Identifier);

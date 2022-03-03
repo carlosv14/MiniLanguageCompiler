@@ -26,6 +26,9 @@ namespace MiniLanguageCompiler.Lexer
                 ["while"] = TokenType.WhileKeyword,
                 ["Array"] = TokenType.ArrayKeyword,
                 ["print"] = TokenType.PrintKeyword,
+                ["bool"] = TokenType.BoolKeyword,
+                ["true"] = TokenType.TrueKeyword,
+                ["false"] = TokenType.FalseKeyword,
             };
         }
 

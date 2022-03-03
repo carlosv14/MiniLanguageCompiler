@@ -53,8 +53,8 @@
     <Compile Include="Symbol.cs" />
     <Compile Include="Types\Type.cs" />
     <Compile Include="Types\Array.cs" />
-    <Compile Include="Expressions\ArrayAccess.cs" />
     <Compile Include="Statements\ArrayAssignationStatement.cs" />
+    <Compile Include="Expressions\ArrayAccessExpression.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Interfaces\" />
