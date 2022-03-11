@@ -16,5 +16,9 @@ namespace MiniLanguageCompiler.Core.Expressions
         }
 
         public abstract Type GetExpressionType();
+
+        public abstract string GenerateCode();
+
+        public abstract dynamic Evaluate();
     }
 }

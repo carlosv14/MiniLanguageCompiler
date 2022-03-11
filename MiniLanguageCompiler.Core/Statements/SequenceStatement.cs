@@ -13,6 +13,17 @@ namespace MiniLanguageCompiler.Core.Statements
         public Statement FirstStatement { get; }
         public Statement NextStatement { get; }
 
+        public override string GenerateCode()
+        {
+            return $"{this.FirstStatement?.GenerateCode()}{System.Environment.NewLine}{this.NextStatement?.GenerateCode()}";
+        }
+
+        public override void Interpret()
+        {
+            this.FirstStatement?.Interpret();
+            this.NextStatement?.Interpret();
+        }
+
         public override void ValidateSemantic()
         {
             this.FirstStatement?.ValidateSemantic();

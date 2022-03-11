@@ -5,7 +5,7 @@ b: number
 result: number
 i: number
 isValid: bool
-arr: Array<string>;
+arr: Array<string>(4);
 
 a <- 5;
 b <- 10;

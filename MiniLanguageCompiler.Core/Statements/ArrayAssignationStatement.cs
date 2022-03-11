@@ -1,10 +1,8 @@
 ﻿using System;
 using MiniLanguageCompiler.Core.Expressions;
-using MiniLanguageCompiler.Core.Types;
 
 namespace MiniLanguageCompiler.Core.Statements
 {
-    //a[0] = 5
     public class ArrayAssignationStatement : Statement
     {
         public IdExpression Id { get; }
@@ -26,15 +24,27 @@ namespace MiniLanguageCompiler.Core.Statements
 
         public override void ValidateSemantic()
         {
-            //arr[1] = arr2;
             if (_access.GetExpressionType() is Core.Types.Array || Expression.GetExpressionType() is Core.Types.Array)
             {
-               // throw new ApplicationException($"Type {Expression.GetExpressionType()} is not assignable to {Id.GetExpressionType()}");
+               throw new ApplicationException($"Type {Expression.GetExpressionType()} is not assignable to {Id.GetExpressionType()}");
             }
             else if (_access.GetExpressionType() != Expression.GetExpressionType())
             {
                 throw new ApplicationException($"Type {Expression.GetExpressionType()} is not assignable to {Id.GetExpressionType()}");
             }
+        }
+
+        public override string GenerateCode()
+        {
+            return $"{this.Id.GenerateCode()}[{this.Index.GenerateCode()}] = {this.Expression.GenerateCode()};{System.Environment.NewLine}";
+        }
+
+        public override void Interpret()
+        {
+            var symbol = this.Id.Evaluate();
+            var position = this.Index.Evaluate();
+            symbol[(int)position] = this.Expression.Evaluate();
+            EnvironmentManager.UpdateSymbol(this.Id.Token.Lexeme, symbol);
         }
     }
 }

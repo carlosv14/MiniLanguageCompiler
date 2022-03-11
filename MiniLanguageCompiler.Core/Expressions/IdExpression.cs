@@ -10,6 +10,16 @@ namespace MiniLanguageCompiler.Core.Expressions
         {
         }
 
+        public override dynamic Evaluate()
+        {
+            return EnvironmentManager.GetSymbolForInterpretation(this.Token.Lexeme).Value;
+        }
+
+        public override string GenerateCode()
+        {
+            return Token.Lexeme;
+        }
+
         public override Type GetExpressionType()
         {
             return type;

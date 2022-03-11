@@ -17,6 +17,30 @@ namespace MiniLanguageCompiler.Core.Statements
         public Statement TrueStatement { get; }
         public Statement FalseStatement { get; }
 
+        public override string GenerateCode()
+        {
+            var code = $"if({this.Expression.GenerateCode()}){{";
+            code += this.TrueStatement.GenerateCode();
+            if (this.FalseStatement != null)
+            {
+                code += $"}}else{{{System.Environment.NewLine}{this.FalseStatement.GenerateCode()}{System.Environment.NewLine}";
+            }
+            code += "}";
+            return code;
+        }
+
+        public override void Interpret()
+        {
+            if (this.Expression.Evaluate())
+            {
+                this.TrueStatement.Interpret();
+            }
+            else
+            {
+                this.FalseStatement?.Interpret();
+            }
+        }
+
         public override void ValidateSemantic()
         {
             if (this.Expression.GetExpressionType() != Types.Type.Bool)

@@ -13,7 +13,9 @@ namespace MiniLanguageCompiler.Console
             var logger = new Logger();
             var scanner = new Scanner(new Input(fileContent), logger);
             var parser = new Parser.Parser(scanner, logger);
-            parser.Parse();
+            var code = parser.Parse();
+            code.Interpret();
+            File.WriteAllText("result.txt", code.GenerateCode());
         }
     }
 }

@@ -16,6 +16,30 @@ namespace MiniLanguageCompiler.Core.Statements
 
         public IEnumerable<TypedExpression> Parameters { get; }
 
+        public override string GenerateCode()
+        {
+            var code = "cout";
+            foreach (var param in this.Parameters)
+            {
+                code += $"<<{param.GenerateCode()}";
+            }
+
+            code += "<<endl;";
+            return code;
+        }
+
+        public override void Interpret()
+        {
+            foreach (var param in this.Parameters)
+            {
+                var value = param.Evaluate();
+                if (value != null)
+                {
+                    Console.WriteLine(value);
+                }
+            }
+        }
+
         public override void ValidateSemantic()
         {
             if (Parameters.Any(x => x.GetExpressionType() != Types.Type.String))

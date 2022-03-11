@@ -28,6 +28,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -55,6 +56,8 @@
     <Compile Include="Types\Array.cs" />
     <Compile Include="Statements\ArrayAssignationStatement.cs" />
     <Compile Include="Expressions\ArrayAccessExpression.cs" />
+    <Compile Include="Statements\BlockStatement.cs" />
+    <Compile Include="Environment.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Interfaces\" />
@@ -62,6 +65,9 @@
     <Folder Include="Expressions\" />
     <Folder Include="Statements\" />
     <Folder Include="Types\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

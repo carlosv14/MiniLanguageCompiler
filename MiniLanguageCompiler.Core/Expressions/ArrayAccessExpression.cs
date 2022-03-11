@@ -20,5 +20,17 @@ namespace MiniLanguageCompiler.Core.Expressions
         {
             return type;
         }
+
+        public override string GenerateCode()
+        {
+            return $"{this.Id.GenerateCode()}[{this.Index.GenerateCode()}]";
+        }
+
+        public override dynamic Evaluate()
+        {
+            var symbol = this.Id.Evaluate();
+            var position = this.Index.Evaluate();
+            return symbol[(int)position];
+        }
     }
 }

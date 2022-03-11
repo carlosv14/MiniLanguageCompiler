@@ -17,6 +17,23 @@ namespace MiniLanguageCompiler.Core.Expressions
             };
         }
 
+        public override dynamic Evaluate()
+        {
+            switch(this.Token.TokenType)
+            {
+                case TokenType.LogicalAnd: return this.LeftExpression.Evaluate() && this.RightExpression.Evaluate();
+                case TokenType.LogicalOr: return this.LeftExpression.Evaluate() || this.RightExpression.Evaluate();
+                default:  throw new System.NotImplementedException();
+            };
+        }
+
+        public override string GenerateCode()
+        {
+            var leftCode = this.LeftExpression.GenerateCode();
+            var rightCode = this.RightExpression.GenerateCode();
+            return $"{leftCode} {this.Token.Lexeme} {rightCode}";
+        }
+
         public override Type GetExpressionType()
         {
             var leftType = LeftExpression.GetExpressionType();

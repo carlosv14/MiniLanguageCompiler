@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using MiniLanguageCompiler.Core;
 using MiniLanguageCompiler.Core.Expressions;
 using MiniLanguageCompiler.Core.Interfaces;
@@ -15,7 +17,6 @@ namespace MiniLanguageCompiler.Parser
         private readonly IScanner scanner;
         private readonly ILogger logger;
         private Token lookAhead;
-        private Environment topEnvironment;
 
         public Parser(IScanner scanner, ILogger logger)
         {
@@ -26,8 +27,7 @@ namespace MiniLanguageCompiler.Parser
 
         public Statement Parse()
         {
-            var program = Program();
-            return program;
+            return Program();
         }
 
         private Statement Program()
@@ -39,8 +39,7 @@ namespace MiniLanguageCompiler.Parser
         {
             //{
             this.Match(TokenType.LeftBrace);
-            var savedEnvironment = topEnvironment;
-            topEnvironment = new Environment(topEnvironment);
+            EnvironmentManager.PushContext();
             Decls();
             if (this.lookAhead.TokenType == TokenType.Semicolon)
             {
@@ -50,8 +49,9 @@ namespace MiniLanguageCompiler.Parser
             var statements = Stmts();
             //}
             this.Match(TokenType.RightBrace);
-            topEnvironment = savedEnvironment;
-            return statements;
+            var blockStatement = new BlockStatement(statements);
+            EnvironmentManager.PopContext();
+            return blockStatement;
         }
 
         private void Decls()
@@ -71,7 +71,7 @@ namespace MiniLanguageCompiler.Parser
             this.Match(TokenType.Colon);
             var type = Type();         
             var id = new IdExpression(type, token);
-            topEnvironment.Put(token.Lexeme, id);
+            EnvironmentManager.Put(token.Lexeme, id, null);
         }
 
         private Core.Types.Type Type()
@@ -89,7 +89,11 @@ namespace MiniLanguageCompiler.Parser
                     this.Match(TokenType.LessThan);
                     var type = Type();
                     this.Match(TokenType.GreaterThan);
-                    return new Core.Types.Array("[]", TokenType.ComplexType, type);
+                    this.Match(TokenType.LeftParens);
+                    var size = this.lookAhead;
+                    this.Match(TokenType.NumberLiteral);
+                    this.Match(TokenType.RightParens);
+                    return new Core.Types.Array("[]", TokenType.ComplexType, type, int.Parse(size.Lexeme));
                 case TokenType.BoolKeyword:
                     this.Match(TokenType.BoolKeyword);
                     return Core.Types.Type.Bool;
@@ -113,7 +117,7 @@ namespace MiniLanguageCompiler.Parser
             switch (this.lookAhead.TokenType)
             {
                 case TokenType.Identifier:
-                    var symbol = topEnvironment.Get(this.lookAhead.Lexeme);
+                    var symbol = EnvironmentManager.Get(this.lookAhead.Lexeme);
                     this.Match(TokenType.Identifier);
                     TypedExpression index = null;
                     if (this.lookAhead.TokenType == TokenType.LeftBracket)
@@ -319,7 +323,7 @@ namespace MiniLanguageCompiler.Parser
                 default:
                     token = this.lookAhead;
                     this.Match(TokenType.Identifier);
-                    return topEnvironment.Get(token.Lexeme).Id;
+                    return EnvironmentManager.Get(token.Lexeme).Id;
             }
         }
     
